@@ -2,6 +2,12 @@ defaults:
   # - level: "3"
   - _self_
 
+cmbfscnn_level  : 3   # 4
+in_channels     : 10  # 8
+out_channels    : 1
+n_feats         : 16
+model_precision : float
+
 preprocess:
 # Wang, et al., scale input by a scalar factor
 #   c.f. min_max_scaling or normalization

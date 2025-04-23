@@ -29,12 +29,12 @@ class PreprocessMakeScaleExecutor(BaseStageExecutor):
         out_dataset_stats_handler: Config
 
         self.in_cmb_map: Asset = self.assets_in["cmb_map"]
-        self.in_obs_maps: Asset = self.asserts_in["obs_maps"]
+        self.in_obs_maps: Asset = self.assets_in["obs_maps"]
         in_cmb_map_handler: HealpyMap
         in_obs_map_handler: HealpyMap
 
-        self.scale_features = cfg.model.cmbfscnn.preprocess.scale_features
-        self.scale_target = cfg.model.cmbfscnn.preprocess.scale_target
+        self.scale_features = cfg.model.preprocess.scale_features
+        self.scale_target = cfg.model.preprocess.scale_target
 
     def execute(self) -> None:
         logger.debug(f"Running {self.__class__.__name__} execute() method.")

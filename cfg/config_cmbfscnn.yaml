@@ -1,10 +1,10 @@
 defaults:
-  - local_system   : ${oc.env:CMB_ML_LOCAL_SYSTEM}
+  - local_system   : generic_lab # ${oc.env:CMB_ML_LOCAL_SYSTEM}
   - file_system    : common_fs
   - pipeline       : assembly_cmbfscnn
   - scenario       : scenario
-  - splits         : "1-1v"  # If you aren't getting as many results as expected, check n_infer_cap as well
-  - model/cmbfscnn : cmbfscnn_model
+  - splits         : "1-1" # Was "1-1v"?  # If you aren't getting as many results as expected, check n_infer_cap as well
+  - model          : cmbfscnn_model
   - model/analysis : basic_analysis
   - override hydra/job_logging: custom_log
   - _self_
