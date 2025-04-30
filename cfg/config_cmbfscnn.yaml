@@ -11,7 +11,7 @@ defaults:
 
 # dataset_name: CMML_Dataset
 # When creating multiple datasets, using interpolation like this may be easier:
-dataset_name       : I_128_1450
+dataset_name       : I_64_1450
 # dataset_name       : CMB-ML_${scenario.nside}_${splits.name}
 # dataset_name       : ${scenario.map_fields}_${scenario.nside}_${splits.name}
 working_dir        : "CMBFSCNN/"
@@ -26,7 +26,7 @@ hydra:
 # These are not to be used directly in the python
 # They are picked up from here and MAY be used elsewhere in the yamls.
 # In the scenario yaml
-nside              : 128 # 512
+nside              : 64 # 512
 detectors          : [100] #, 143, 217, 353]
 map_fields         : "I"
 
