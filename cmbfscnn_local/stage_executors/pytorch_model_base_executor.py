@@ -94,7 +94,7 @@ class BaseCMBFSCNNModelExecutor(BasePyTorchModelExecutor):
         # self.max_filters = cfg.model.network.max_filters
         
         # nside = cfg.scenario.nside
-        # input_channels = cfg.scenario.detector_freqs
+        input_channels = cfg.scenario.detector_freqs
         # kernels_size = cfg.model.network.kernels_size
         # strides = cfg.model.network.strides
         # mainActive = cfg.model.network.mainActive
@@ -107,7 +107,8 @@ class BaseCMBFSCNNModelExecutor(BasePyTorchModelExecutor):
         # sides = (nside, nside)
 
         self.cmbfscnn_level = cfg.model.cmbfscnn_level
-        in_channels = cfg.model.in_channels
+        # in_channels = cfg.model.in_channels
+        in_channels = len(input_channels)
         out_channels = cfg.model.out_channels
         n_feats = cfg.model.n_feats
 
@@ -121,4 +122,4 @@ class BaseCMBFSCNNModelExecutor(BasePyTorchModelExecutor):
         logger.debug(f"Output result size: {result.size()}")
 
     def make_model(self):
-        return make_cmbfscnn(self.level, self.in_channels, self.out_channels, self.n_feats)
+        return make_cmbfscnn(self.model_dict, self.cmbfscnn_level)

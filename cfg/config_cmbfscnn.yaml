@@ -3,7 +3,7 @@ defaults:
   - file_system    : common_fs
   - pipeline       : assembly_cmbfscnn
   - scenario       : scenario
-  - splits         : "1-1" # Was "1-1v"?  # If you aren't getting as many results as expected, check n_infer_cap as well
+  - splits         : "all" # Was "1-1v"?  # If you aren't getting as many results as expected, check n_infer_cap as well
   - model          : cmbfscnn_model
   - model/analysis : basic_analysis
   - override hydra/job_logging: custom_log
@@ -11,7 +11,7 @@ defaults:
 
 # dataset_name: CMML_Dataset
 # When creating multiple datasets, using interpolation like this may be easier:
-dataset_name       : CMB-ML_512_1450
+dataset_name       : I_128_1450
 # dataset_name       : CMB-ML_${scenario.nside}_${splits.name}
 # dataset_name       : ${scenario.map_fields}_${scenario.nside}_${splits.name}
 working_dir        : "CMBFSCNN/"
@@ -26,7 +26,7 @@ hydra:
 # These are not to be used directly in the python
 # They are picked up from here and MAY be used elsewhere in the yamls.
 # In the scenario yaml
-nside              : 512
+nside              : 128 # 512
 detectors          : [100] #, 143, 217, 353]
 map_fields         : "I"
 
