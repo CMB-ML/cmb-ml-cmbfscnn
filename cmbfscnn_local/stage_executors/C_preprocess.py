@@ -17,7 +17,10 @@ from cmbml.core import (
     Split,
     Asset
     )
-from cmbfscnn.spherical import sphere2piecePlane
+from cmbfscnn.spherical import (
+    sphere2piecePlane,
+    piecePlane2blocks
+    )
 from cmbml.core.asset_handlers import (
     QTableHandler,
     NumpyMap,
@@ -43,6 +46,7 @@ class TaskTarget(NamedTuple):
     norm_factors: float
     detector_cen_freq: Union[float, str]
     nside: int
+    block: str
 
 
 class PreprocessExecutor(BaseStageExecutor):
@@ -100,7 +104,8 @@ class PreprocessExecutor(BaseStageExecutor):
                         detector_fields=self.cfg.scenario.map_fields,
                         detector_cen_freq='cmb',
                         norm_factors=scale_factors['cmb'],
-                        nside=self.cfg.nside
+                        nside=self.cfg.nside,
+                        block=self.cfg.model.block
                     )
                 tasks.append(x)
                 for freq, detector in self.instrument.dets.items():
@@ -115,7 +120,8 @@ class PreprocessExecutor(BaseStageExecutor):
                             detector_fields=detector.fields,
                             detector_cen_freq=detector.cen_freq,
                             norm_factors=scale_factors[freq],
-                            nside=self.cfg.nside
+                            nside=self.cfg.nside,
+                            block=self.cfg.model.block
                         )
                     tasks.append(x)
         return tasks
@@ -154,7 +160,8 @@ def parallel_preprocess(task_target: TaskTarget):
         scale_factors=tt.norm_factors,
         detector_fields=tt.detector_fields,
         detector_cen_freq=tt.detector_cen_freq,
-        nside=tt.nside
+        nside=tt.nside,
+        block=tt.block
     )
 
     out_asset = tt.asset_out
@@ -166,7 +173,8 @@ def preprocess_map(all_map_fields: str,
                    scale_factors: Dict[str, Dict[str, float]],
                    detector_fields: str,
                    detector_cen_freq: float,
-                   nside: int
+                   nside: int,
+                   block: str
                   ) -> List[np.ndarray]:
     processed_maps = []
     all_fields:str = all_map_fields  # Either I or IQU
@@ -180,7 +188,8 @@ def preprocess_map(all_map_fields: str,
         else:
             scaled_map = scaled_map.to_value(u.uK_CMB, equivalencies=u.cmb_equivalencies(detector_cen_freq))
         mangled_map = sphere2piecePlane(scaled_map, nside)
-        processed_maps.append(mangled_map)
+        patch = piecePlane2blocks(mangled_map, nside)[block]
+        processed_maps.append(patch)
     return processed_maps
 
 

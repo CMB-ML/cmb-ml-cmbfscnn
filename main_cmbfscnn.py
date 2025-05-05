@@ -33,20 +33,19 @@ from cmbml.sims import MaskCreatorExecutor
 from cmbfscnn_local import (
                            HydraConfigCMBFSCNNCheckerExecutor,
                            PreprocessMakeScaleExecutor,
-                        #    NonParallelPreprocessExecutor,
                            PreprocessExecutor,
                            TrainingExecutor,
                            PredictionExecutor,
                            PostprocessExecutor,
                            )
 
-# from cmbml.analysis import (
-#                             CommonRealPostExecutor,
-#                             CommonPredPostExecutor,
-#                             CommonShowSimsPostExecutor,
-#                             PixelAnalysisExecutor,
-#                             PixelSummaryExecutor,
-#                             )
+from cmbml.analysis import (
+                            CommonRealPostExecutor,
+                            CommonPredPostExecutor,
+                            CommonShowSimsPostExecutor,
+                            PixelAnalysisExecutor,
+                            PixelSummaryExecutor,
+                            )
 
 
 logger = logging.getLogger(__name__)
@@ -66,7 +65,6 @@ def run_cmbfscnn(cfg):
 
     pipeline_context.add_pipe(PreprocessMakeScaleExecutor)
     
-    # # pipeline_context.add_pipe(NonParallelPreprocessExecutor)
     pipeline_context.add_pipe(PreprocessExecutor)
     
     pipeline_context.add_pipe(TrainingExecutor)
@@ -75,20 +73,18 @@ def run_cmbfscnn(cfg):
     
     pipeline_context.add_pipe(PostprocessExecutor)
 
-    # pipeline_context.add_pipe(MaskCreatorExecutor)
+    # In the following, "Common" means "Apply the same postprocessing to all models"; requires a mask
+    # Apply to the target (CMB realization)
+    pipeline_context.add_pipe(CommonRealPostExecutor)
 
-    # # In the following, "Common" means "Apply the same postprocessing to all models"; requires a mask
-    # # Apply to the target (CMB realization)
-    # pipeline_context.add_pipe(CommonRealPostExecutor)
+    # Apply to CMBFSCNN's predictions
+    pipeline_context.add_pipe(CommonPredPostExecutor)
 
-    # # # Apply to CMBFSCNN's predictions
-    # pipeline_context.add_pipe(CommonPredPostExecutor)
+    # Show results of cleaning
+    pipeline_context.add_pipe(CommonShowSimsPostExecutor)
 
-    # # Show results of cleaning
-    # pipeline_context.add_pipe(CommonShowSimsPostExecutor)
-
-    # pipeline_context.add_pipe(PixelAnalysisExecutor)
-    # pipeline_context.add_pipe(PixelSummaryExecutor)
+    pipeline_context.add_pipe(PixelAnalysisExecutor)
+    pipeline_context.add_pipe(PixelSummaryExecutor)
 
     pipeline_context.prerun_pipeline()
 

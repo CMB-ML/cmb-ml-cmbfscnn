@@ -3,7 +3,7 @@ defaults:
   - file_system    : common_fs
   - pipeline       : assembly_cmbfscnn
   - scenario       : scenario
-  - splits         : "all" # Was "1-1v"?  # If you aren't getting as many results as expected, check n_infer_cap as well
+  - splits         : "all" # If you aren't getting as many results as expected, check n_infer_cap as well
   - model          : cmbfscnn_model
   - model/analysis : basic_analysis
   - override hydra/job_logging: custom_log
@@ -11,7 +11,8 @@ defaults:
 
 # dataset_name: CMML_Dataset
 # When creating multiple datasets, using interpolation like this may be easier:
-dataset_name       : I_64_1450
+# dataset_name       : I_128_1450_OLD
+dataset_name       : I_${scenario.nside}_${splits.name}
 # dataset_name       : CMB-ML_${scenario.nside}_${splits.name}
 # dataset_name       : ${scenario.map_fields}_${scenario.nside}_${splits.name}
 working_dir        : "CMBFSCNN/"
@@ -26,16 +27,16 @@ hydra:
 # These are not to be used directly in the python
 # They are picked up from here and MAY be used elsewhere in the yamls.
 # In the scenario yaml
-nside              : 64 # 512
-detectors          : [100] #, 143, 217, 353]
-map_fields         : "I"
+nside              : 512
+detectors          : [30, 44, 70, 100, 143, 217, 353, 545] #, 857] # CMBFSCNN used 8 different frequencies based on CMB-S4
+map_fields         : "I" # CMBFSCNN used QU
 
 # In the model yaml
-num_epochs         : 1
+num_epochs         : 140
 
 # In the pipeline yamls
 # For prediction, postprocessing, power spectra generation:
-use_epochs           : [1] #, 60, 80, 100, 120]
+use_epochs           : [140] #, 60, 80, 100, 120]
 # For single simulation figures (maps & ps figures):
 use_epochs_imgs      : ${use_epochs}
 # For summary statistics:
@@ -43,9 +44,9 @@ use_epochs_map_stats : ${use_epochs}
 # For summary statistics:
 use_epochs_ps_stats  : ${use_epochs}
 # Limit the number of simulations for which to generate figures
-n_show_cap           : 1
+n_show_cap           : 5
 
 # Limit the number of simulations on which to do inference and postprocessing
 # In the splits yaml; null to run on all
-n_infer_cap           : 1 # null
+n_infer_cap           : null
 run_inference_on      : valid  # Either "test" or "valid" ("train" should work, but is not recommended)

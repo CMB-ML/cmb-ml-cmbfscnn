@@ -10,7 +10,7 @@ from multiprocessing import Pool, Manager
 from omegaconf import DictConfig
 from tqdm import tqdm
 
-from cmbfscnn.spherical import piecePlane2sphere
+from cmbfscnn.spherical import blockPlane2sphere_mult
 
 from cmbml.core import (
     BaseStageExecutor,
@@ -39,6 +39,7 @@ class TaskTarget(NamedTuple):
     asset_out: FrozenAsset
     all_map_fields: str
     norm_factors: float
+    nside: int
 
 
 class PostprocessExecutor(BaseStageExecutor):
@@ -146,7 +147,7 @@ def postprocess_map(all_map_fields: str,
         field_scale = scale_factors[field_char]
         field_data = map_data[field_idx]
         scaled_map = unnormalize(field_data, field_scale)
-        mangled_map = piecePlane2sphere(scaled_map, nside)
+        mangled_map = blockPlane2sphere_mult(scaled_map, nside)
         processed_maps.append(mangled_map)
     return processed_maps
 
